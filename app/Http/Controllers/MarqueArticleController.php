@@ -47,7 +47,7 @@ class MarqueArticleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(MarqueCreateRequest $request)
     {
         $formInput = $request->all();
          // Store the New Etat commande
@@ -92,7 +92,7 @@ class MarqueArticleController extends Controller
      * @param  \App\MarqueArticle  $marqueArticle
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, MarqueArticle $marqueArticle)
+    public function update(MarqueCreateCreateRequest $request, MarqueArticle $marqueArticle)
     {
         $marquearticle->fill($request->input());
         $marquearticle->save();

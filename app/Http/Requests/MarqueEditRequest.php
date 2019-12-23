@@ -13,7 +13,7 @@ class MarqueEditRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return $this->user()->can('marque-edit');
     }
 
     /**
@@ -23,8 +23,8 @@ class MarqueEditRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        return array_merge(parent::rules(), [
+            
+        ]);
     }
 }

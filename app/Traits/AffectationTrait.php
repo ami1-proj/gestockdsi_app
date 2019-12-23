@@ -9,9 +9,11 @@ use App\TypeMouvement;
 use App\TypeAffectation;
 use App\Article;
 use App\Statut;
+use Illuminate\Support\Carbon;
+
 
 trait AffectationTrait {
-	public function createNew($objet, $type_affectation_tag, $elem_id, $liste_article_ids = null) : Affectation {
+	public function createNew($objet, $date_affectation, $type_affectation_tag, $elem_id, $liste_article_ids = null) : Affectation {
 		$statut_id_default = Statut::default()->first()->id;
 		$mouvement_default = TypeMouvement::creation()->first();
 		$details_mouvement = "Creation Nouvelle affectation";
@@ -40,7 +42,7 @@ trait AffectationTrait {
 
 	   // On complete les donnnees de la nouvelle affectation
 	   $new_affectation->objet = $objet;
-	   $new_affectation->date_debut = now();
+	   $new_affectation->date_debut = Carbon::parse($date_affectation);
 	   $new_affectation->type_affectation_id = TypeAffectation::tagged($type_affectation_tag)->first()->id;
 	   $new_affectation->statut_id = $statut_id_default;
 
@@ -175,6 +177,39 @@ trait AffectationTrait {
 			}
 
 			return $formInput;
+	}
+
+	public function addRemoveArticles($articles_list_from, $articles_list_to, $articles_list_selected) {
+		//1. On retire les articles selectionneés de la liste d'origine
+		$articles_list_from_old = $articles_list_from;
+		$articles_list_from = [];
+
+		$articles_list_selected = Article::whereIn('id', $articles_list_selected)->get()->pluck('reference_complete', 'id')->toArray();
+		foreach ($articles_list_from_old as $id => $value) {
+			if(array_key_exists($id, $articles_list_selected)) {
+			} else {
+				$articles_list_from[$id] = $value;
+			}
+		}
+
+		//2. On ajoute ces articles dans la liste des articles a affecter
+		if (is_null($articles_list_to)) {
+			$articles_list_to = $articles_list_selected;
+		} else {
+			$befor = $articles_list_to;
+			$articles_list_to = $articles_list_to + $articles_list_selected;
+		}
+
+		$articles_list_from_json = json_encode($articles_list_from);
+		$articles_list_to_json = json_encode($articles_list_to);
+
+		return [
+			$articles_list_from,
+			$articles_list_to,
+			$articles_list_from_json,
+			$articles_list_to_json
+		];
+
 	}
 
 }

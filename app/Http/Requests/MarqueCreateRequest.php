@@ -23,8 +23,8 @@ class MarqueCreateRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        return array_merge(parent::rules(), [
+            
+        ]);
     }
 }

@@ -37,4 +37,13 @@ class MarqueArticleRequest extends FormRequest
             ]
         ];
     }
+
+    public function messages()
+    {
+        return [
+          
+          'libelle.required' => 'Prière de renseigner le libelle', 
+          
+        ];
+   }
 }
